@@ -1,0 +1,19 @@
+<div class="container">
+<div class="col-md-8">
+    <table class="table table-striped">
+      <thead>
+        <th>Name</th>
+       
+        <th>Score</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of userService.usersData">
+          <td>{{ user.name }}</td>
+         
+          <td>{{ user.score }}</td>
+          
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
