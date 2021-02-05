@@ -24,5 +24,4 @@ export class RoomService {
     return this.http.get(this.url_api_room_occupied) ;
   }
 
-
 }

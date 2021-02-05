@@ -88,11 +88,11 @@ export class RegistryComponent implements OnInit {
       this.errorHandlingCreateRoom = "Ya existe ese codigo intente con otro"
     } else {
       this.userService.createUser(createUser).subscribe(
-        // res => this.userService.userSesion = res ,  
+       
         (res) => {
           this.userSesion = res
           this.createNewRoom(this.userSesion)
-          // return res
+         
         });
     }
   }

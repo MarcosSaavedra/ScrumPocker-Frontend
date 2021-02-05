@@ -4,6 +4,7 @@ import {  User} from '../../models/user';
 import { RoomService } from 'src/app/services/room.service';
 import { ɵDomSharedStylesHost } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -17,14 +18,24 @@ export class UserComponent implements OnInit {
   votation: number = 0;
   idUser : string | null = ' ' ; 
   showResults: boolean = false ; 
-  constructor(public userService: UserService , public roomService: RoomService , private route:ActivatedRoute) { }
+  
+  constructor(public userService: UserService , 
+    public roomService: RoomService , private route:ActivatedRoute , 
+    private router: Router) { }
   
   ngOnInit(): void {
     this.room = this.route.snapshot.paramMap.get('idRoom');
     this.idUser = this.route.snapshot.paramMap.get('idUser');
-    console.log(this.idUser);
+    this.getUser(this.idUser); 
     this.getTheUsers(this.room);
     this.getTheRoom(this.room); 
+  }
+  getUser(idUser:any ){
+    this.userService.getUser(idUser).subscribe(
+      //res => this.userService.userFound = res 
+      res=>console.log(res)
+      
+    )
   }
   getItems(event:any){
    this.votation=event.target.value;
@@ -81,9 +92,37 @@ export class UserComponent implements OnInit {
   }
   actualizateResults(){
     this.showResults = true ; 
+    
   }
   actualizateTable(){
     this.getTheUsers(this.room);
+  }
+  startAgain(){
+    let restart = {
+      room: this.room?.toString(),
+      votation: false,
+      score: 0,
+
+    }
+    console.log("hasta aqui");
+    
+    this.userService.startAgain(restart).subscribe(
+      
+      
+      
+    )
+    window.location.reload();
+    this.getTheUsers(this.room);
+  }
+  exitRoom(){
+   
+    this.userService.deleteUser(this.idUser).subscribe(
+      res => console.log(res)
+      
+    )
+    this.router.navigate(['']);
+
+    
   }
     
    
