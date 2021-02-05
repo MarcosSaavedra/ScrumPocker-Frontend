@@ -3,6 +3,7 @@ import {UserService } from '../../services/user.service';
 import {  User} from '../../models/user';
 import { RoomService } from 'src/app/services/room.service';
 import { ɵDomSharedStylesHost } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -12,19 +13,74 @@ import { ɵDomSharedStylesHost } from '@angular/platform-browser';
 export class UserComponent implements OnInit {
   userData:User[] = []; 
   userSesion:User[] = []; 
-  constructor(public userService: UserService , public roomService: RoomService ) { }
- 
+  room: string | null = "" ; 
+  votation: number = 0;
+  idUser : string | null = ' ' ; 
+  showResults: boolean = false ; 
+  constructor(public userService: UserService , public roomService: RoomService , private route:ActivatedRoute) { }
+  
   ngOnInit(): void {
-    this.getTheUsers();
+    this.room = this.route.snapshot.paramMap.get('idRoom');
+    this.idUser = this.route.snapshot.paramMap.get('idUser');
+    console.log(this.idUser);
+    this.getTheUsers(this.room);
+    this.getTheRoom(this.room); 
     // this.userService.getUsers().subscribe(
     //   res => console.log(res),
     //   err => console.error(err)
       
     // )
-  
+    
+    
   }
-  getTheUsers(){
-    this.userService.getUsers().subscribe(
+  getItems(event:any){
+   this.votation=event.target.value;
+          console.log(this.votation);
+          let createUser = {
+            _id :  this.idUser?.toString() , 
+        
+            votation: true,
+            score: this.votation,
+      
+          }
+      this.userService.updateUser(createUser).subscribe(
+        res  => console.log(res) , 
+        err => console.error(err)
+        
+       
+        
+      )
+      this.getTheUsers(this.room)
+
+  }
+  getTheRoom(room: string | null){
+    this.roomService.getRoom(room).subscribe(
+      res => {
+        console.log(res);
+         let typeOfRoom = res.typeOfRoom; 
+         console.log(res.typeOfRoom);
+         
+         this.userService.getVotingSystem(typeOfRoom).subscribe(
+          res => {
+           
+             this.userService.elementsSystemVoting = res.numbers;
+          }
+         )
+        // this.userData = res ;
+       
+       
+        
+        //console.log(this.userService.elementsSystemVoting);
+        
+
+      }, 
+      err => console.error(err)
+      
+      
+    )
+  }
+  getTheUsers(room: string | null){
+    this.userService.getUsers(room).subscribe(
       res => {
          this.userService.usersData = res; 
         // this.userData = res ;
@@ -39,6 +95,12 @@ export class UserComponent implements OnInit {
       
       
     )
+  }
+  actualizateResults(){
+    this.showResults = true ; 
+  }
+  actualizateTable(){
+    this.getTheUsers(this.room);
   }
     
    

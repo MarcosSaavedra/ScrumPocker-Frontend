@@ -9,6 +9,7 @@ export class UserService {
   usersData:User[] = []; 
   votingSystemData: VotingSystem[]= [] ;
   userSesion: User [] = [ ] ; 
+  elementsSystemVoting: Number[]= [] ;
   url_api_users = 'http://localhost:8000/api/users' ;
   url_api_votingSystems = 'http://localhost:8000/api/system' ;
 
@@ -16,9 +17,9 @@ export class UserService {
    // this.usersData = User[]; 
   }
   
-  getUsers(){
-   
-      return this.http.get<User[]>(this.url_api_users) ;
+  getUsers(room: string | any ){
+
+      return this.http.get<User[]>(this.url_api_users + `/${room}`) ;
     
       
   }
@@ -26,9 +27,18 @@ export class UserService {
     //return this.http.post(this.url_api , user , {responseType: 'text'}); 
     return this.http.post<User>(this.url_api_users , user ); 
   }
+  updateUser(user: User){
+    //return this.http.post(this.url_api , user , {responseType: 'text'}); 
+    return this.http.put<User>(this.url_api_users + `/${user._id}` , user ); 
+  }
 
   getVotingSystems(){
     //return this.http.post(this.url_api , user , {responseType: 'text'}); 
     return this.http.get<VotingSystem[]>(this.url_api_votingSystems); 
+  }
+
+  getVotingSystem(typeOfRoom: string | any){
+    //return this.http.post(this.url_api , user , {responseType: 'text'}); 
+    return this.http.get<VotingSystem>(this.url_api_votingSystems+ `/${typeOfRoom}`); 
   }
 }

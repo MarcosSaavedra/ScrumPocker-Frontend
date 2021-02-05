@@ -1,6 +1,19 @@
 <div class="container">
 
-  
+ <h3 style="margin-left: 10px ;margin-bottom:30px; margin-top: 40;">Seleccione un Valor</h3>
+ <div class="col-md-12">
+<button *ngFor="let number of userService.elementsSystemVoting"
+class="btn btn-light"
+style="margin-left: 10px ;margin-bottom:10px;" (click)="getItems($event)" value={{number}}>{{number}}
+</button>
+</div>
+<h4 *ngIf = "votation === 0 ">Valor establecido en :  - </h4>
+<h4 *ngIf = "votation !== 0 ">Valor establecido en :  {{votation}} </h4>
+  <h3 >Resultados
+  </h3>
+  <button class="btn btn-primary" (click)="actualizateTable()">Actualizar</button>
+  <button class="btn btn-primary" style="margin-left: 10px" (click)="actualizateResults()">Mostrar Resultados</button>
+  <br>
 <div class="col-md-8">
     <table class="table table-striped">
       <thead>
@@ -11,25 +24,15 @@
       <tbody>
         <tr *ngFor="let user of userService.usersData">
           <td>{{ user.name }}</td>
-         
-          <td>{{ user.score }}</td>
-          
+          <td *ngIf = "user.score === 0 && showResults === false" > - </td>
+          <td *ngIf = "user.votation === true && showResults === false" >X</td>
+          <td *ngIf = "showResults === true" >{{user.score}}</td>
+          <!-- <td *ngIf = "user.votation === true ">{{ user.score }}</td>
+           -->
         </tr>
       </tbody>
     </table>
-    <!-- <table class="table table-striped">
-      <thead>
-        <th>Name</th>
-       
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of userService.userSesion">
-          <td>{{ user.name }}</td>
-         
-          
-        </tr>
-      </tbody>
-    </table> -->
+   
   </div>
 </div>
   

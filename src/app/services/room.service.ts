@@ -15,4 +15,8 @@ export class RoomService {
     return this.http.post<Room []>(this.url_api_room , room ); 
   }
 
+  getRoom(room: string | any  ){
+    return this.http.get<Room>(this.url_api_room + `/${room}`) ;
+  }
+
 }

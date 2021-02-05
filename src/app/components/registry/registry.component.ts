@@ -15,9 +15,10 @@ export class RegistryComponent implements OnInit {
   createRoomName = '';
   userName = '';
   joinRoomName = '';
-  votingSystemSelected = ' ';
+  votingSystemSelected = 'Fibonacci';
   userSesion: User = {
     name : "",
+    room : "" , 
     votation : false,
     score : 0,
   };
@@ -51,36 +52,22 @@ export class RegistryComponent implements OnInit {
     this.joinRoomName = event.target.value;
   }
 
-  async createRoom() {
+  async createUser() {
     let createUser = {
       name: this.creatorName,
+      room : this.createRoomName , 
       votation: false,
       score: 0,
 
     }
-    let asdf =  await this.userService.createUser(createUser).subscribe(
+     this.userService.createUser(createUser).subscribe(
       // res => this.userService.userSesion = res ,  
       (res) => {
         this.userSesion = res
         this.createNewRoom(this.userSesion)
-        return res
+       // return res
       });
 
-   
-
-    
-
-
-    // let typeOfRoom = this.votingSystemSelected ;
-
-    // let codeOfRoom = this.createRoomName ; 
-    // console.log(typeOfRoom);
-    // this.router.navigate(['/room/' + this.createRoomName]);
-    // console.log(this.userComponent.userSesion);
-    // console.log(this.roomService.roomSesion);
-
-
-    //this.router.navigate(['/room/'+ this.createRoomName + '/' + this.userService.userSesion[0].name ]);
   }
   createNewRoom(myUser:User){
 
@@ -103,10 +90,20 @@ export class RegistryComponent implements OnInit {
   }
 
   joinRoom() {
-    let name = this.userName;
-    let votation = false;
-    let score = 0;
-    let roomName = this.createRoomName;
+    
+    let createUser = {
+      name: this.userName,
+      room : this.joinRoomName , 
+      votation: false,
+      score: 0,
+
+    }
+     this.userService.createUser(createUser).subscribe(
+      // res => this.userService.userSesion = res ,  
+      (res) => {
+        this.userSesion = res
+        this.router.navigate(['/room/'+ this.joinRoomName + '/' + this.userSesion._id ]);
+      });
 
   }
 

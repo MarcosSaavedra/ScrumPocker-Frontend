@@ -11,7 +11,7 @@ import { RegistryComponent } from './components/registry/registry.component';
 
 const routes: Route[]  = [
   {path : '' , component: RegistryComponent} ,
-  {path : 'room/:id/:idUser' , component: UserComponent} ,
+  {path : 'room/:idRoom/:idUser' , component: UserComponent} ,
   
 ]
 @NgModule({
