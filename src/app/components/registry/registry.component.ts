@@ -16,14 +16,15 @@ export class RegistryComponent implements OnInit {
   userName = '';
   joinRoomName = '';
   votingSystemSelected = 'Fibonacci';
+  errorHandlingCreateRoom = '';
+  errorHandlingJoinRoom = '';
+  roomsOcuppied: any | number = [];
   userSesion: User = {
-    name : "",
-    room : "" , 
-    votation : false,
-    score : 0,
+    name: "",
+    room: "",
+    votation: false,
+    score: 0,
   };
-
- 
 
   constructor(public userService: UserService, public roomService: RoomService
     , private router: Router) { }
@@ -32,12 +33,13 @@ export class RegistryComponent implements OnInit {
     // console.log(this.nameValue);
     this.getTheVotingSystens();
     console.log(this.userService.votingSystemData);
+    this.getRoomsOccupied();
+    console.log(this.roomsOcuppied);
+
 
   }
   selectChangeHandler(event: any) {
     this.votingSystemSelected = event.target.value;
-
-
   }
   onKey(event: any) { // without type info
     this.creatorName = event.target.value;
@@ -51,75 +53,115 @@ export class RegistryComponent implements OnInit {
   onKey4(event: any) { // without type info
     this.joinRoomName = event.target.value;
   }
+  createNewUser() {
+    this.roomService.getRoomOccupied().subscribe(
 
-  async createUser() {
+      (res) => {
+        this.roomsOcuppied = res
+        this.createUser(this.roomsOcuppied)
+      }
+    )
+  }
+  joinRoomUser() {
+    this.roomService.getRoomOccupied().subscribe(
+
+      (res) => {
+        this.roomsOcuppied = res
+        this.joinRoom(this.roomsOcuppied)
+      }
+    )
+  }
+  createUser(rooomie: any | number[]) {
+    this.errorHandlingCreateRoom = '';
     let createUser = {
       name: this.creatorName,
-      room : this.createRoomName , 
+      room: this.createRoomName,
       votation: false,
       score: 0,
 
     }
-     this.userService.createUser(createUser).subscribe(
-      // res => this.userService.userSesion = res ,  
-      (res) => {
-        this.userSesion = res
-        this.createNewRoom(this.userSesion)
-       // return res
-      });
-
+    if (this.creatorName === '') {
+      this.errorHandlingCreateRoom = "por favor ingrese un nombre"
+    } else if (this.createRoomName === '') {
+      this.errorHandlingCreateRoom = "por favor establezca un codigo de sala"
+    } else if (rooomie.includes(parseInt(this.createRoomName))) {
+      this.errorHandlingCreateRoom = "Ya existe ese codigo intente con otro"
+    } else {
+      this.userService.createUser(createUser).subscribe(
+        // res => this.userService.userSesion = res ,  
+        (res) => {
+          this.userSesion = res
+          this.createNewRoom(this.userSesion)
+          // return res
+        });
+    }
   }
-  createNewRoom(myUser:User){
+  getRoomsOccupied() {
+    this.roomService.getRoomOccupied().subscribe(
 
+      res => this.roomsOcuppied = res
+      ,
+      err => console.error(err)
+
+
+    )
+  }
+
+
+  createNewRoom(myUser: User) {
+    this.getRoomsOccupied();
     let createRoom = {
       codeRoom: this.createRoomName,
       userAdmin: this.creatorName,
       typeOfRoom: this.votingSystemSelected,
       active: true,
-
     }
+
     this.roomService.createRoom(createRoom).subscribe(
       res => {
         this.roomService.roomSesion = res,
-        console.log(myUser);
-        this.router.navigate(['/room/'+ this.createRoomName + '/' + myUser._id ]);
+          console.log(myUser);
+        this.router.navigate(['/room/' + this.createRoomName + '/' + myUser._id]);
       },
 
       err => console.error(err)
     )
   }
 
-  joinRoom() {
-    
+  joinRoom(roomie: any | number[]) {
+    console.log(this.roomsOcuppied);
+    this.getRoomsOccupied();
+    console.log(this.roomsOcuppied);
+    this.errorHandlingJoinRoom = ' ';
+
     let createUser = {
       name: this.userName,
-      room : this.joinRoomName , 
+      room: this.joinRoomName,
       votation: false,
       score: 0,
 
     }
-     this.userService.createUser(createUser).subscribe(
-      // res => this.userService.userSesion = res ,  
-      (res) => {
-        this.userSesion = res
-        this.router.navigate(['/room/'+ this.joinRoomName + '/' + this.userSesion._id ]);
-      });
-
+    if (this.userName === '') {
+      this.errorHandlingJoinRoom = "por favor ingrese un nombre"
+    } else if (this.joinRoomName === '') {
+      this.errorHandlingJoinRoom = "por favor ingrese un codigo de sala"
+    } else if (!roomie.includes(parseInt(this.joinRoomName))) {
+      this.errorHandlingJoinRoom = "No Existe es sala, por favor intente otra sala"
+    } else {
+      this.userService.createUser(createUser).subscribe(
+        (res) => {
+          this.userSesion = res
+          this.router.navigate(['/room/' + this.joinRoomName + '/' + this.userSesion._id]);
+        });
+    }
   }
 
   getTheVotingSystens() {
     this.userService.getVotingSystems().subscribe(
       res => {
         this.userService.votingSystemData = res;
-        // this.userData = res ;
-        console.log(res);
-
-
-
       },
       err => console.error(err)
-
-
     )
   }
 

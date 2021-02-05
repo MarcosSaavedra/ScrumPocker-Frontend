@@ -23,8 +23,9 @@
     <select class="form-control" name="miselect" (change)="selectChangeHandler($event)"  >
       <option  *ngFor="let item of userService.votingSystemData">{{item.name}} ( {{item.numbers}} )</option>
     </select>
+    <p>{{errorHandlingCreateRoom}}</p>
   </div>
-    <button class="btn btn-primary"(click)="createUser()">Crear</button>
+    <button class="btn btn-primary"(click)="createNewUser()">Crear</button>
 </div>
     </div>
   </div>
@@ -44,7 +45,8 @@
       <label>Codigo de Sala</label>
     <input type="number" class="form-control" placeholder="#Ejemplo(1234)"(keyup)="onKey4($event)" name=name_of_room_join>
   </div>
-    <button class="btn btn-primary"(click)="joinRoom()">Unirse</button>
+  <p>{{errorHandlingJoinRoom}}</p>
+    <button class="btn btn-primary"(click)="joinRoomUser()">Unirse</button>
 </div>
     </div>
   </div>

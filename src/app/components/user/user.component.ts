@@ -25,13 +25,6 @@ export class UserComponent implements OnInit {
     console.log(this.idUser);
     this.getTheUsers(this.room);
     this.getTheRoom(this.room); 
-    // this.userService.getUsers().subscribe(
-    //   res => console.log(res),
-    //   err => console.error(err)
-      
-    // )
-    
-    
   }
   getItems(event:any){
    this.votation=event.target.value;
@@ -45,10 +38,7 @@ export class UserComponent implements OnInit {
           }
       this.userService.updateUser(createUser).subscribe(
         res  => console.log(res) , 
-        err => console.error(err)
-        
-       
-        
+        err => console.error(err)   
       )
       this.getTheUsers(this.room)
 
@@ -66,13 +56,6 @@ export class UserComponent implements OnInit {
              this.userService.elementsSystemVoting = res.numbers;
           }
          )
-        // this.userData = res ;
-       
-       
-        
-        //console.log(this.userService.elementsSystemVoting);
-        
-
       }, 
       err => console.error(err)
       

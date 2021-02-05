@@ -8,6 +8,7 @@ export class RoomService {
   votingSystemData: Room[]= [] ;
   roomSesion: Room [] = [] ; 
   url_api_room = 'http://localhost:8000/api/room' ;
+  url_api_room_occupied = 'http://localhost:8000/api/room/occupied' ;
   constructor(private http: HttpClient) { }
 
   createRoom(room: Room){
@@ -18,5 +19,10 @@ export class RoomService {
   getRoom(room: string | any  ){
     return this.http.get<Room>(this.url_api_room + `/${room}`) ;
   }
+  
+  getRoomOccupied( ){
+    return this.http.get(this.url_api_room_occupied) ;
+  }
+
 
 }
