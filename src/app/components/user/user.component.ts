@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService } from '../../services/user.service';
 import {  User} from '../../models/user';
+import { RoomService } from 'src/app/services/room.service';
+import { ɵDomSharedStylesHost } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user',
@@ -9,7 +11,8 @@ import {  User} from '../../models/user';
 })
 export class UserComponent implements OnInit {
   userData:User[] = []; 
-  constructor(public userService: UserService) { }
+  userSesion:User[] = []; 
+  constructor(public userService: UserService , public roomService: RoomService ) { }
  
   ngOnInit(): void {
     this.getTheUsers();
@@ -18,6 +21,7 @@ export class UserComponent implements OnInit {
     //   err => console.error(err)
       
     // )
+  
   }
   getTheUsers(){
     this.userService.getUsers().subscribe(
